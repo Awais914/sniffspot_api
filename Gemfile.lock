@@ -145,7 +145,6 @@ GEM
     rake (13.0.6)
     reline (0.3.2)
       io-console (~> 0.5)
-    sqlite3 (1.6.0-x86_64-darwin)
     thor (1.2.1)
     timeout (0.3.1)
     tzinfo (2.0.6)
@@ -166,7 +165,6 @@ DEPENDENCIES
   pg
   puma (~> 5.0)
   rails (~> 7.0.4, >= 7.0.4.2)
-  sqlite3 (~> 1.4)
   tzinfo-data
 
 RUBY VERSION
