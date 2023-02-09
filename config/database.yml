@@ -13,6 +13,8 @@ default: &default
 development:
   <<: *default
   database: sniffspot_dev
+  username: dev
+  password: postgres
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -20,7 +22,12 @@ development:
 test:
   <<: *default
   database: sniffspot_test
+  username: dev
+  password: postgres
 
 production:
   <<: *default
   database: sniffspot_prod
+  username: dev
+  password: postgres
+
