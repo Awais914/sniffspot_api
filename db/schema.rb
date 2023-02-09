@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema[7.0].define(version: 2023_02_09_101022) do
+=======
+ActiveRecord::Schema[7.0].define(version: 2023_02_09_133923) do
+>>>>>>> Stashed changes
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +26,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_09_101022) do
     t.index ["spot_id"], name: "index_images_on_spot_id"
   end
 
+<<<<<<< Updated upstream
+=======
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "spot_id", null: false
+    t.text "content"
+    t.float "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["spot_id"], name: "index_reviews_on_spot_id"
+  end
+
+>>>>>>> Stashed changes
   create_table "spots", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
@@ -31,4 +47,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_09_101022) do
   end
 
   add_foreign_key "images", "spots"
+<<<<<<< Updated upstream
+=======
+  add_foreign_key "reviews", "spots"
+>>>>>>> Stashed changes
 end
