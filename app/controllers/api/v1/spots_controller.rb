@@ -4,7 +4,10 @@ module Api
       before_action :set_spot, only: [:show, :update]
       
       def index
-        render json: Spot.all
+        records = []
+        Spot.all.each { |spot| available_spot_to_visit(spot, records) }
+
+        render json: records
       end
 
       def create
@@ -26,7 +29,7 @@ module Api
       end
 
       def show
-        render json: @spot
+        render json: available_spot_to_visit(@spot)
       end
 
       def sort
@@ -44,6 +47,17 @@ module Api
 
       def spot_params
         params.require(:spot).permit(:title, :description, :price, images_attributes: [:link])
+      end
+
+      def available_spot_to_visit(spot, records = [])
+        ratings = spot&.reviews&.pluck(:rating)
+        count = spot&.reviews&.pluck(:rating)&.count
+        average_rating = ratings&.reduce(:+) / ratings&.length.to_f if ratings.present?
+
+        records << { id: spot.id, title: spot.title, description: spot.description, price: spot.price,
+                         images: spot.images, average_rating: average_rating.to_f, count: count }
+        records.last[:reviews] = spot&.reviews.present? ? spot&.reviews : 'No Reviews Available'
+        records
       end
     end
   end

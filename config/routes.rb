@@ -5,6 +5,7 @@ Rails.application.routes.draw do
         collection do
           get :sort
         end
+        resources :reviews, only:[:create, :update]
       end
     end
   end
