@@ -57,7 +57,7 @@ module Api
         records << { id: spot.id, title: spot.title, description: spot.description, price: spot.price, 
                      average_rating: average_rating.to_f, count: count }
 
-        records.last[:images] = one_spot.present? ? spot.images : spot.images.first.link
+        records.last[:images] = one_spot.present? ? spot&.images : spot&.images&.first&.link
         records.last[:reviews] = (spot&.reviews.present? ? spot&.reviews : []) if one_spot.present?
         records
       end
