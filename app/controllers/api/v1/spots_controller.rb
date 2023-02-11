@@ -59,7 +59,7 @@ module Api
 
         records.last[:image] = one_spot.present? ? spot&.images : spot&.images&.first&.link
         records.last[:reviews] = (spot&.reviews.presence || []) if one_spot.present?
-        records
+        one_spot.present? ? records.first : records
       end
 
       def list_spots(order = 'asc', type = '')
