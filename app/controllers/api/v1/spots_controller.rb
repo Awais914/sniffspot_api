@@ -3,13 +3,11 @@
 module Api
   module V1
     class SpotsController < ApplicationController
+      include Constants
       before_action :set_spot, only: %i[show update]
 
       def index
-        records = []
-        Spot.all.each { |spot| available_spot_to_visit(spot, nil, records) }
-
-        render json: records
+        render json: list_spots
       end
 
       def show
@@ -19,7 +17,7 @@ module Api
       def create
         spot = Spot.new(spot_params)
 
-        if spot.save!
+        if spot.save
           render json: spot.to_json(include: [:images]), status: :created
         else
           render json: spot.errors, status: :unprocessable_entity
@@ -27,7 +25,7 @@ module Api
       end
 
       def update
-        if @spot.update!(spot_params)
+        if @spot.update(spot_params)
           render json: @spot
         else
           render json: @spot.errors, status: :unprocessable_entity
@@ -36,7 +34,7 @@ module Api
 
       def sort
         order = params[:order]
-        spots = Spot.order(price: order.to_sym)
+        spots = SORTING_ORDER.include?(order) ? list_spots(order) : list_spots
 
         render json: spots
       end
@@ -61,6 +59,12 @@ module Api
 
         records.last[:image] = one_spot.present? ? spot&.images : spot&.images&.first&.link
         records.last[:reviews] = (spot&.reviews.presence || []) if one_spot.present?
+        records
+      end
+
+      def list_spots(order = 'asc')
+        records = []
+        Spot.order(price: order.to_sym).all.each { |spot| available_spot_to_visit(spot, nil, records) }
         records
       end
     end
