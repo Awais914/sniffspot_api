@@ -5,7 +5,8 @@ module Api
     class SpotsController < ApplicationController
       include Constants
       before_action :set_spot, only: %i[show update]
-
+      before_action :image_url, only: :create
+      
       def index
         render json: list_spots
       end
@@ -16,7 +17,7 @@ module Api
 
       def create
         spot = Spot.new(spot_params)
-
+        
         if spot.save
           render json: spot.to_json(include: [:images]), status: :created
         else
@@ -68,6 +69,12 @@ module Api
         
         spots.each { |spot| available_spot_to_visit(spot, nil, records) }
         records
+      end
+
+      def image_url
+        spot_params[:images_attributes]&.each do |img|
+          img[:link]['http'] = 'https'
+        end
       end
     end
   end
