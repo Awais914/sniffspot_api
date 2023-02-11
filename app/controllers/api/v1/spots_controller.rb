@@ -1,19 +1,23 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class SpotsController < ApplicationController
-      before_action :set_spot, only: [:show, :update]
-      
-      def index
-        records = []
-        Spot.all.each { |spot| available_spot_to_visit(spot, nil, records) }
+      include Constants
+      before_action :set_spot, only: %i[show update]
 
-        render json: records
+      def index
+        render json: list_spots
+      end
+
+      def show
+        render json: available_spot_to_visit(@spot, 'spot')
       end
 
       def create
         spot = Spot.new(spot_params)
 
-        if spot.save!
+        if spot.save
           render json: spot.to_json(include: [:images]), status: :created
         else
           render json: spot.errors, status: :unprocessable_entity
@@ -21,20 +25,16 @@ module Api
       end
 
       def update
-        if @spot.update!(spot_params)
+        if @spot.update(spot_params)
           render json: @spot
         else
           render json: @spot.errors, status: :unprocessable_entity
         end
       end
 
-      def show
-        render json: available_spot_to_visit(@spot, 'spot')
-      end
-
       def sort
         order = params[:order]
-        spots = Spot.order(price: order.to_sym)
+        spots = SORTING_ORDER.include?(order) ? list_spots(order) : list_spots
 
         render json: spots
       end
@@ -52,13 +52,19 @@ module Api
       def available_spot_to_visit(spot, one_spot = nil, records = [])
         ratings = spot&.reviews&.pluck(:rating)
         count = spot&.reviews&.pluck(:rating)&.count
-        average_rating = ratings&.reduce(:+) / ratings&.length.to_f if ratings.present?
+        average_rating = ratings&.reduce(:+)&./ ratings&.length.to_f
 
-        records << { id: spot.id, title: spot.title, description: spot.description, price: spot.price, 
-                     average_rating: average_rating.to_f, rating_count: count }
+        records << { id: spot.id, title: spot.title, description: spot.description, price: spot.price,
+                     average_rating: average_rating.to_f.round(2), rating_count: count }
 
         records.last[:image] = one_spot.present? ? spot&.images : spot&.images&.first&.link
-        records.last[:reviews] = (spot&.reviews.present? ? spot&.reviews : []) if one_spot.present?
+        records.last[:reviews] = (spot&.reviews.presence || []) if one_spot.present?
+        records
+      end
+
+      def list_spots(order = 'asc')
+        records = []
+        Spot.order(price: order.to_sym).all.each { |spot| available_spot_to_visit(spot, nil, records) }
         records
       end
     end
