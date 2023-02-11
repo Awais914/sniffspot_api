@@ -10,7 +10,7 @@ Bundler.require(*Rails.groups)
 
 module SiffspotApp
   class Application < Rails::Application
-    config.autoload_paths << Rails.root.join("lib")
+    config.autoload_paths << Rails.root.join('lib')
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
