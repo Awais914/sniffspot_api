@@ -34,7 +34,7 @@ module Api
 
       def sort
         order = params[:order]
-        spots = SORTING_ORDER.include?(order) ? list_spots(order) : list_spots
+        spots = SORTING_ORDER.include?(order) ? list_spots(order, 'sorted') : list_spots
 
         render json: spots
       end
@@ -62,9 +62,11 @@ module Api
         records
       end
 
-      def list_spots(order = 'asc')
+      def list_spots(order = 'asc', type = '')
         records = []
-        Spot.order(price: order.to_sym).all.each { |spot| available_spot_to_visit(spot, nil, records) }
+        spots = type.eql?('sorted') ? Spot.order(price: order.to_sym) : Spot.all
+        
+        spots.each { |spot| available_spot_to_visit(spot, nil, records) }
         records
       end
     end
