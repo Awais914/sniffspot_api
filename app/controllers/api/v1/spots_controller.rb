@@ -6,7 +6,7 @@ module Api
       include Constants
       before_action :set_spot, only: %i[show update]
       before_action :image_url, only: :create
-      
+
       def index
         render json: list_spots
       end
@@ -73,7 +73,7 @@ module Api
 
       def image_url
         spot_params[:images_attributes]&.each do |img|
-          img[:link]['http'] = 'https'
+          img[:link]['http://'] = 'https://'
         end
       end
     end
