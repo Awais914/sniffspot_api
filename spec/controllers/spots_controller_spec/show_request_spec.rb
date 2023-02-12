@@ -12,9 +12,9 @@ RSpec.describe 'API V1 Spots', type: :request do
 
       record = JSON.parse(response.body)
 
-      expect(record.last['title']).to eq(spot.title)
-      expect(record.last['description']).to eq(spot.description)
-      expect(record.last['price']).to eq(spot.price)
+      expect(record['title']).to eq(spot.title)
+      expect(record['description']).to eq(spot.description)
+      expect(record['price']).to eq(spot.price)
     end
   end
 end
