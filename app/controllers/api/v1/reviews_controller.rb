@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class ReviewsController < ApplicationController
@@ -6,7 +8,7 @@ module Api
 
       def create
         @review = @spot.reviews.build(review_params)
-        
+
         if @review.save
           render json: @review, status: :created
         else

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Spot < ApplicationRecord
   has_many :images, inverse_of: :spot, autosave: true, dependent: :destroy
   has_many :reviews
