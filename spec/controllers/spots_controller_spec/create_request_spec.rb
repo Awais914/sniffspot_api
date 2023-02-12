@@ -6,6 +6,8 @@ RSpec.describe 'API V1 Spots', type: :request do
   describe 'POST /api/v1/spots/' do
     it 'should create the spot' do
       spot_params = attributes_for(:spot)
+      spot_params = spot_params.merge(images_attributes: [{ link: 'http://neilpatel.com/wp-content/uploads/2019/08/google.jpg' }])
+
       post '/api/v1/spots', params: { spot: spot_params }
 
       record = JSON.parse(response.body)
